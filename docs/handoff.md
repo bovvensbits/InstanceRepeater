@@ -37,6 +37,8 @@ Read at the start of every session, update at the end (newest entry at the top o
 
 ## Log
 
+- 2026-11-05 (ChatGPT): added right-click 'Plugin neu laden' via `~InstanceRepeaterReloader` helper plugin (unload script state, reload after frames), and changed launcher to reference exact StatsToolbox TGA core/ring/hover artwork. This means StatsToolbox assets must be installed at `Bovven/StatsToolbox/Resources/`. InstanceRepeater displays IR over the shared core. Not tested in game. Ensure helper is packaged with release.
+
 - 2026-11-05 (ChatGPT): replaced square IR launcher styling with standalone 40x40 TGA gold ring and brighter hover variant in `Bovven/InstanceRepeater/Resources/`, preserving centered IR and StatsToolbox-style left-click/drag/right-click interaction. Artwork is a stylistic match, not the exact StatsToolbox original. Not tested in LOTRO.
 
 - 2026-11-05 (ChatGPT): added `Bovven/InstanceRepeater/Launcher.lua`, a 40px draggable gold/dark launcher based on StatsToolbox's interaction pattern. Left-click toggles the window; right-click opens menu (toggle, roster, reset invitations, reset position, hide until reload). Per-character position persisted. Artwork is standalone 'IR' rather than StatsToolbox's textured TGA ring. Not tested in game. Check event handling and save behavior.
