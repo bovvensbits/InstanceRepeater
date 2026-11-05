@@ -37,6 +37,8 @@ Read at the start of every session, update at the end (newest entry at the top o
 
 ## Log
 
+- 2026-11-05 (ChatGPT): added `Leave Group` native alias Quickslot with `/raid leave` (documented historical LOTRO chat command); adjusted compact/expanded UI height and list positioning. Not tested in current LOTRO client; validate command, click forwarding through label, and layout. Existing Leave Instance instruction remains separate.
+
 - 2026-11-05 (ChatGPT): added right-click 'Plugin neu laden' via `~InstanceRepeaterReloader` helper plugin (unload script state, reload after frames), and changed launcher to reference exact StatsToolbox TGA core/ring/hover artwork. This means StatsToolbox assets must be installed at `Bovven/StatsToolbox/Resources/`. InstanceRepeater displays IR over the shared core. Not tested in game. Ensure helper is packaged with release.
 
 - 2026-11-05 (ChatGPT): replaced square IR launcher styling with standalone 40x40 TGA gold ring and brighter hover variant in `Bovven/InstanceRepeater/Resources/`, preserving centered IR and StatsToolbox-style left-click/drag/right-click interaction. Artwork is a stylistic match, not the exact StatsToolbox original. Not tested in LOTRO.
