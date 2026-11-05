@@ -151,7 +151,8 @@ end)
 local pendingAdvance = false
 local advanceDriver = Turbine.UI.Control()
 advanceDriver:SetParent(win)
-advanceDriver:SetVisible(false)
+advanceDriver:SetSize(1,1)
+advanceDriver:SetMouseVisible(false)
 advanceDriver.Update = function()
   advanceDriver:SetWantsUpdates(false)
   if not pendingAdvance then return end
