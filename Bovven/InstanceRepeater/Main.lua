@@ -189,6 +189,12 @@ local function toggleWindow()
 end
 local launcher = InstanceRepeater.Launcher.Create(uiSettings, saveUI, {
   toggleWindow = toggleWindow,
+  reload = function()
+    persist()
+    saveUI()
+    local ok, err = pcall(function() Turbine.PluginManager.LoadPlugin("~InstanceRepeaterReloader") end)
+    if not ok then Turbine.Shell.WriteLine("InstanceRepeater: Reload fehlgeschlagen: " .. tostring(err)) end
+  end,
   resetInvites = function() index = 1; updateSlot(); status:SetText("Einladungsfolge zurückgesetzt") end,
   showRoster = function() if not expanded then expanded = true; resize() end; win:SetVisible(true); uiSettings.windowHidden = false; saveUI() end,
   showWindow = function() win:SetVisible(true); uiSettings.windowHidden = false; saveUI() end,
