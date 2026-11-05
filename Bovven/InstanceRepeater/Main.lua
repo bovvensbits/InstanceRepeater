@@ -21,12 +21,12 @@ end
 
 local win = Turbine.UI.Lotro.Window()
 win:SetText("Instance Repeater")
-win:SetSize(340,381)
+win:SetSize(340,346)
 win:SetPosition(200,180)
 local background = Turbine.UI.Control()
 background:SetParent(win)
 background:SetPosition(9,52)
-background:SetSize(322,320)
+background:SetSize(322,285)
 background:SetBackColor(Theme.Color("background"))
 background:SetMouseVisible(false)
 
@@ -49,7 +49,7 @@ header:SetFont(Turbine.UI.Lotro.Font.TrajanPro14 or Turbine.UI.Lotro.Font.Verdan
 local status = label(91,"Bereit",28)
 local roster = Turbine.UI.ListBox()
 roster:SetParent(win)
-roster:SetPosition(22,389)
+roster:SetPosition(22,354)
 roster:SetSize(296,188)
 roster:SetVisible(false)
 
@@ -75,6 +75,7 @@ local slot = Turbine.UI.Lotro.Quickslot()
 slot:SetParent(slotMask)
 slot:SetPosition(0,0)
 slot:SetSize(306,28)
+slot:SetZOrder(2)
 slot:SetAllowDrop(false)
 slot:SetUseOnRightClick(false)
 local slotCaption = Turbine.UI.Label()
@@ -85,6 +86,7 @@ slotCaption:SetFont(Turbine.UI.Lotro.Font.Verdana14)
 slotCaption:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter)
 slotCaption:SetForeColor(Theme.Color("accent"))
 slotCaption:SetMouseVisible(false)
+slotCaption:SetZOrder(3)
 slotCaption:SetText("Nächsten Spieler einladen")
 
 local function updateSlot()
@@ -101,7 +103,8 @@ local function updateSlot()
       status:SetText("Ungültiger Spielername")
       return
     end
-    local shortcut = Turbine.UI.Lotro.Shortcut(Turbine.UI.Lotro.ShortcutType.Alias, "/invite " .. name)
+    local shortcut = Turbine.UI.Lotro.Shortcut(Turbine.UI.Lotro.ShortcutType.Alias, "")
+    shortcut:SetData("/invite " .. name)
     slot:SetShortcut(shortcut)
     slotCaption:SetText("Einladen: " .. name .. " (" .. index .. "/" .. #saved .. ")")
   end
@@ -143,19 +146,30 @@ button(127,"Aktuelle Gruppe speichern",function()
   status:SetText(#saved .. " Mitspieler gespeichert")
 end)
 
--- The LOTRO client must verify whether the click event advances after alias activation.
-slot.MouseClick = function(_,args)
-  if args.Button == Turbine.UI.MouseButton.Left and index <= #saved then
-    index=index+1
+-- Never replace the shortcut during MouseClick: LOTRO may not yet have
+-- executed the alias when this callback runs. Advance on the next UI update.
+local pendingAdvance = false
+local advanceDriver = Turbine.UI.Control()
+advanceDriver:SetParent(win)
+advanceDriver:SetVisible(false)
+advanceDriver.Update = function()
+  advanceDriver:SetWantsUpdates(false)
+  if not pendingAdvance then return end
+  pendingAdvance = false
+  if index <= #saved then
+    index = index + 1
     updateSlot()
     status:SetText("Fortschritt: " .. math.min(index-1,#saved) .. " / " .. #saved)
   end
 end
+slot.MouseClick = function(_,args)
+  if args.Button == Turbine.UI.MouseButton.Left and index <= #saved and not pendingAdvance then
+    pendingAdvance = true
+    advanceDriver:SetWantsUpdates(true)
+  end
+end
 
-button(202,"Leave Instance: Portrait-Menü",function()
-  status:SetText("Rechtsklick Portrait > Leave Instance")
-end)
-button(237,"Einladungen zurücksetzen",function()
+button(202,"Einladungen zurücksetzen",function()
   index=1
   updateSlot()
   status:SetText("Einladungsfolge zurückgesetzt")
@@ -165,7 +179,7 @@ end)
 -- /raid leave is used for leaving a fellowship or raid; verify on the current client.
 local leaveGroupFrame = Turbine.UI.Control()
 leaveGroupFrame:SetParent(win)
-leaveGroupFrame:SetPosition(16,306)
+leaveGroupFrame:SetPosition(16,271)
 leaveGroupFrame:SetSize(308,28)
 leaveGroupFrame:SetBackColor(Theme.Color("accent"))
 local leaveGroupSlot = Turbine.UI.Lotro.Quickslot()
@@ -187,7 +201,7 @@ leaveGroupText:SetText("Leave Group")
 leaveGroupText:SetMouseVisible(false)
 
 local modeButton
-modeButton = Theme.Button(win,16,341,308,28,"Modus: 6 Spieler",function()
+modeButton = Theme.Button(win,16,306,308,28,"Modus: 6 Spieler",function()
   groupLimit = (groupLimit == 6) and 12 or 6
   modeButton:SetText("Modus: " .. groupLimit .. " Spieler")
   refresh()
@@ -195,11 +209,11 @@ end)
 local toggle
 local function resize()
   roster:SetVisible(expanded)
-  win:SetSize(340,expanded and 592 or 381)
-  background:SetSize(322,expanded and 531 or 320)
+  win:SetSize(340,expanded and 557 or 346)
+  background:SetSize(322,expanded and 496 or 285)
   toggle:SetText(expanded and "Spielerliste ausblenden ▲" or "Spielerliste anzeigen ▼")
 end
-toggle = button(272,"Spielerliste anzeigen ▼",function()
+toggle = button(237,"Spielerliste anzeigen ▼",function()
   expanded=not expanded
   resize()
 end)
