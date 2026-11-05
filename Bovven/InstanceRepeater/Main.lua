@@ -3,9 +3,14 @@ import "Turbine.Gameplay"
 import "Turbine.UI"
 import "Turbine.UI.Lotro"
 import "Bovven.InstanceRepeater.Theme"
+import "Bovven.InstanceRepeater.Launcher"
 
 local Theme = InstanceRepeater.Theme
 local KEY = "SavedPlayers_v1"
+local UI_KEY = "LauncherSettings_v1"
+local uiSettings = Turbine.PluginData.Load(Turbine.DataScope.Character, UI_KEY)
+if type(uiSettings) ~= "table" then uiSettings = {} end
+local function saveUI() Turbine.PluginData.Save(Turbine.DataScope.Character, UI_KEY, uiSettings) end
 local saved = Turbine.PluginData.Load(Turbine.DataScope.Character, KEY)
 if type(saved) ~= "table" then saved = {} end
 local index, expanded = 1, false
@@ -175,5 +180,17 @@ toggle = button(272,"Spielerliste anzeigen ▼",function()
   resize()
 end)
 refresh()
-win:SetVisible(true)
-plugin.Unload = function() persist() end
+win:SetVisible(uiSettings.windowHidden ~= true)
+local function toggleWindow()
+  local visible = not win:IsVisible()
+  win:SetVisible(visible)
+  uiSettings.windowHidden = not visible
+  saveUI()
+end
+local launcher = InstanceRepeater.Launcher.Create(uiSettings, saveUI, {
+  toggleWindow = toggleWindow,
+  resetInvites = function() index = 1; updateSlot(); status:SetText("Einladungsfolge zurückgesetzt") end,
+  showRoster = function() if not expanded then expanded = true; resize() end; win:SetVisible(true); uiSettings.windowHidden = false; saveUI() end,
+  showWindow = function() win:SetVisible(true); uiSettings.windowHidden = false; saveUI() end,
+})
+plugin.Unload = function() persist(); saveUI() end
