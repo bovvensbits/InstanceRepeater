@@ -23,6 +23,12 @@ function Launcher.Create(settings, saveSettings, actions)
   end
   clamp(settings.launcherX,settings.launcherY)
 
+  local core = Turbine.UI.Control()
+  core:SetParent(w)
+  core:SetSize(SIZE,SIZE)
+  core:SetBlendMode(Turbine.UI.BlendMode.AlphaBlend)
+  core:SetBackground("Bovven/StatsToolbox/Resources/LauncherCore3.tga")
+  core:SetMouseVisible(false)
   local outer = Turbine.UI.Control()
   outer:SetParent(w)
   outer:SetSize(SIZE,SIZE)
