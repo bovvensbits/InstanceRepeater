@@ -9,18 +9,19 @@ local KEY = "SavedPlayers_v1"
 local saved = Turbine.PluginData.Load(Turbine.DataScope.Character, KEY)
 if type(saved) ~= "table" then saved = {} end
 local index, expanded = 1, false
+local groupLimit = 6
 local function persist()
   Turbine.PluginData.Save(Turbine.DataScope.Character, KEY, saved)
 end
 
 local win = Turbine.UI.Lotro.Window()
 win:SetText("Instance Repeater")
-win:SetSize(340,310)
+win:SetSize(340,346)
 win:SetPosition(200,180)
 local background = Turbine.UI.Control()
 background:SetParent(win)
 background:SetPosition(9,52)
-background:SetSize(322,249)
+background:SetSize(322,285)
 background:SetBackColor(Theme.Color("background"))
 background:SetMouseVisible(false)
 
@@ -38,22 +39,48 @@ local function button(y,text,fn)
   return Theme.Button(win,16,y,308,28,text,fn)
 end
 
-local header = label(63,"Gruppe: 0 / 12 gespeichert")
+local header = label(63,"Gruppe: 0 / 6 gespeichert")
 header:SetFont(Turbine.UI.Lotro.Font.TrajanPro14 or Turbine.UI.Lotro.Font.Verdana14)
 local status = label(91,"Bereit",28)
 local roster = Turbine.UI.ListBox()
 roster:SetParent(win)
-roster:SetPosition(22,316)
+roster:SetPosition(22,354)
 roster:SetSize(296,188)
 roster:SetVisible(false)
 
+-- Mask the native quickslot artwork behind the same framed control style used by StatsToolbox.
+-- Only the genuine Quickslot receives mouse input and executes the alias.
+local inviteFrame = Turbine.UI.Control()
+inviteFrame:SetParent(win)
+inviteFrame:SetPosition(16,165)
+inviteFrame:SetSize(308,30)
+inviteFrame:SetBackColor(Theme.Color("accent"))
+local inviteFill = Turbine.UI.Control()
+inviteFill:SetParent(inviteFrame)
+inviteFill:SetPosition(1,1)
+inviteFill:SetSize(306,28)
+inviteFill:SetBackColor(Theme.Color("buttonFill"))
+inviteFill:SetMouseVisible(false)
+local slotMask = Turbine.UI.Control()
+slotMask:SetParent(inviteFrame)
+slotMask:SetPosition(1,1)
+slotMask:SetSize(306,28)
+-- Child coordinates outside the parent control are clipped by LOTRO UI.
 local slot = Turbine.UI.Lotro.Quickslot()
-slot:SetParent(win)
-slot:SetPosition(16,165)
-slot:SetSize(308,30)
+slot:SetParent(slotMask)
+slot:SetPosition(-34,-34)
+slot:SetSize(340,62)
 slot:SetAllowDrop(false)
-local slotCaption = label(171,"Nächsten Spieler einladen")
+slot:SetUseOnRightClick(false)
+local slotCaption = Turbine.UI.Label()
+slotCaption:SetParent(inviteFrame)
+slotCaption:SetPosition(2,2)
+slotCaption:SetSize(304,26)
+slotCaption:SetFont(Turbine.UI.Lotro.Font.Verdana14)
+slotCaption:SetTextAlignment(Turbine.UI.ContentAlignment.MiddleCenter)
+slotCaption:SetForeColor(Theme.Color("accent"))
 slotCaption:SetMouseVisible(false)
+slotCaption:SetText("Nächsten Spieler einladen")
 
 local function updateSlot()
   if #saved == 0 then
@@ -69,13 +96,14 @@ local function updateSlot()
       status:SetText("Ungültiger Spielername")
       return
     end
-    slot:SetShortcut(Turbine.UI.Lotro.Shortcut(
-      Turbine.UI.Lotro.ShortcutType.Alias, "/invite " .. name))
+    local shortcut = Turbine.UI.Lotro.Shortcut(Turbine.UI.Lotro.ShortcutType.Alias, "")
+    shortcut:SetData("/invite " .. name)
+    slot:SetShortcut(shortcut)
     slotCaption:SetText("Einladen: " .. name .. " (" .. index .. "/" .. #saved .. ")")
   end
 end
 local function refresh()
-  header:SetText("Gruppe: " .. #saved .. " / 12 gespeichert")
+  header:SetText("Gruppe: " .. #saved .. " / " .. groupLimit .. " gespeichert")
   roster:ClearItems()
   for i=1,#saved do
     local item = Turbine.UI.Label()
@@ -97,7 +125,7 @@ button(127,"Aktuelle Gruppe speichern",function()
     local member = party:GetMember(i)
     if member then
       local name = member:GetName()
-      if name and name ~= player:GetName() and not seen[name] and #names < 11 then
+      if name and name ~= player:GetName() and not seen[name] and #names < groupLimit - 1 then
         names[#names+1]=name
         seen[name]=true
       end
@@ -120,8 +148,8 @@ slot.MouseClick = function(_,args)
   end
 end
 
-button(202,"Leave Instance (Anleitung)",function()
-  status:SetText("Eigenes Portrait > Leave Instance")
+button(202,"Leave Instance: Portrait-Menü",function()
+  status:SetText("Rechtsklick Portrait > Leave Instance")
 end)
 button(237,"Einladungen zurücksetzen",function()
   index=1
@@ -129,11 +157,17 @@ button(237,"Einladungen zurücksetzen",function()
   status:SetText("Einladungsfolge zurückgesetzt")
 end)
 
+local modeButton
+modeButton = Theme.Button(win,16,306,308,28,"Modus: 6 Spieler",function()
+  groupLimit = (groupLimit == 6) and 12 or 6
+  modeButton:SetText("Modus: " .. groupLimit .. " Spieler")
+  refresh()
+end)
 local toggle
 local function resize()
   roster:SetVisible(expanded)
-  win:SetSize(340,expanded and 521 or 310)
-  background:SetSize(322,expanded and 460 or 249)
+  win:SetSize(340,expanded and 557 or 346)
+  background:SetSize(322,expanded and 496 or 285)
   toggle:SetText(expanded and "Spielerliste ausblenden ▲" or "Spielerliste anzeigen ▼")
 end
 toggle = button(272,"Spielerliste anzeigen ▼",function()
@@ -142,4 +176,4 @@ toggle = button(272,"Spielerliste anzeigen ▼",function()
 end)
 refresh()
 win:SetVisible(true)
-plugin.Unload = persist
+plugin.Unload = function() persist() end
