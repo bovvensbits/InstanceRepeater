@@ -23,12 +23,13 @@ function Launcher.Create(settings, saveSettings, actions)
   local outer = Turbine.UI.Control()
   outer:SetParent(w)
   outer:SetSize(SIZE,SIZE)
-  outer:SetBackColor(color(0.85,0.68,0.32))
+  outer:SetBlendMode(Turbine.UI.BlendMode.AlphaBlend)
+  outer:SetBackground("Bovven/InstanceRepeater/Resources/LauncherRing.tga")
   local inner = Turbine.UI.Control()
   inner:SetParent(outer)
   inner:SetPosition(2,2)
   inner:SetSize(SIZE-4,SIZE-4)
-  inner:SetBackColor(color(0.02,0.02,0.02))
+  inner:SetMouseVisible(false)
   inner:SetMouseVisible(false)
   local icon = Turbine.UI.Label()
   icon:SetParent(outer)
@@ -67,8 +68,8 @@ function Launcher.Create(settings, saveSettings, actions)
     self.menu = m
   end
   local dragging,moved,offsetX,offsetY,startX,startY = false,false,0,0,0,0
-  icon.MouseEnter = function() outer:SetBackColor(color(1,0.82,0.38)) end
-  icon.MouseLeave = function() if not dragging then outer:SetBackColor(color(0.85,0.68,0.32)) end end
+  icon.MouseEnter = function() outer:SetBackground("Bovven/InstanceRepeater/Resources/LauncherRingHover.tga") end
+  icon.MouseLeave = function() if not dragging then outer:SetBackground("Bovven/InstanceRepeater/Resources/LauncherRing.tga") end end
   icon.MouseDown = function(_,args)
     if args.Button ~= Turbine.UI.MouseButton.Left then return end
     dragging,moved = true,false
