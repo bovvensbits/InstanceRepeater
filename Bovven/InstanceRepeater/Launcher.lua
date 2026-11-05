@@ -7,6 +7,9 @@ InstanceRepeater.Launcher = Launcher
 local SIZE = 40
 local function color(r,g,b) return Turbine.UI.Color(1,r,g,b) end
 function Launcher.Create(settings, saveSettings, actions)
+  if type(settings) ~= "table" then settings = {} end
+  if type(saveSettings) ~= "function" then saveSettings = function() end end
+  if type(actions) ~= "table" then actions = {} end
   local self = {}
   local w = Turbine.UI.Window()
   self.window = w
@@ -59,9 +62,9 @@ function Launcher.Create(settings, saveSettings, actions)
       item.Click = function() fn() end
       items:Add(item)
     end
-    add("Fenster anzeigen / ausblenden",actions.toggleWindow)
-    add("Spielerliste anzeigen",actions.showRoster)
-    add("Einladungsfolge zurücksetzen",actions.resetInvites)
+    add("Fenster anzeigen / ausblenden",actions.toggleWindow or function() end)
+    add("Spielerliste anzeigen",actions.showRoster or function() end)
+    add("Einladungsfolge zurücksetzen",actions.resetInvites or function() end)
     add("Button-Position zurücksetzen",function() self:ResetPosition() end)
     add("Button ausblenden (Neuladen zeigt ihn wieder)",function() self:SetShown(false) end)
     m:ShowMenu()
@@ -88,7 +91,7 @@ function Launcher.Create(settings, saveSettings, actions)
     if moved then
       settings.launcherX,settings.launcherY = w:GetPosition()
       saveSettings()
-    else actions.toggleWindow() end
+    elseif actions.toggleWindow then actions.toggleWindow() end
   end
   icon.MouseClick = function(_,args)
     if args.Button == Turbine.UI.MouseButton.Right then menu() end
