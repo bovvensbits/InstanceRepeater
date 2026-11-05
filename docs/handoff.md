@@ -6,8 +6,8 @@ Read at the start of every session, update at the end (newest entry at the top o
 
 - Repository initialized for sequential Claude / ChatGPT collaboration using the same workflow as StatsToolbox.
 - Shared agent rules: `AGENTS.md`; Claude entry point: `CLAUDE.md`.
-- **No plugin source has been committed yet.** Earlier chat test builds (0.1 / 0.2) are not verified as present in this repository.
-- No automated tests are configured yet; no LOTRO in-game tests have been run from this repository.
+- **Plugin source 0.3.0 committed:** `InstanceRepeater/Main.lua`, `InstanceRepeater/Theme.lua`, and `InstanceRepeater.plugin`. Reworked from the earlier 0.2 test build. Theme uses StatsToolbox default accent, background, button fill and text RGB roles; not yet a pixel-perfect port of every StatsToolbox widget.
+- No automated tests are configured yet; no LOTRO in-game tests have been run from this repository. The new UI and shortcut logic are unverified.
 
 ## Intended features
 
@@ -19,7 +19,7 @@ Read at the start of every session, update at the end (newest entry at the top o
 
 ## Open / ideas
 
-- Import the latest available Instance Repeater source into the repository.
+- Verify the newly imported 0.3 source in the LOTRO client; refine the appearance against actual StatsToolbox screenshots. The Quickslot may display a native icon over the caption.
 - Confirm Lua package paths and test loading in the LOTRO client.
 - Verify party roster enumeration and saved data.
 - Verify whether Quickslot click can reliably advance an alias; avoid skipping players.
@@ -36,5 +36,7 @@ Read at the start of every session, update at the end (newest entry at the top o
 - Leave Instance button accurately reflects what it can do.
 
 ## Log
+
+- 2026-11-05 (ChatGPT): added 0.3 plugin source and StatsToolbox-default-colour theme helper, compact collapsed-list UI. Not tested in LOTRO; invitation click advancement remains experimental and Leave Instance remains instructional.
 
 - 2026-11-05 (ChatGPT): initialized shared agent instructions and handoff based on StatsToolbox's one-agent-at-a-time, direct-to-main workflow. Source and tests not yet imported.
