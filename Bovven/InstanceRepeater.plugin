@@ -7,4 +7,5 @@
     <Description>Compact LOTRO instance group helper.</Description>
   </Information>
   <Package>Bovven.InstanceRepeater.Main</Package>
+  <Configuration Apartment="InstanceRepeater" />
 </Plugin>
