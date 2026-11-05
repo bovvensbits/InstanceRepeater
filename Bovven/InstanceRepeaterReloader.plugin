@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Plugin>
+  <Information>
+    <Name>~InstanceRepeaterReloader</Name>
+    <Author>Bovven</Author>
+    <Version>0.3.2</Version>
+    <Description>Reload helper for InstanceRepeater. Do not load manually.</Description>
+  </Information>
+  <Package>Bovven.InstanceRepeaterReloader.Main</Package>
+  <Configuration Apartment="~InstanceRepeaterReloader" />
+</Plugin>
