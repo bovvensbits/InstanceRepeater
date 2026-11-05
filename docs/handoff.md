@@ -7,7 +7,7 @@ Read at the start of every session, update at the end (newest entry at the top o
 - Repository initialized for sequential Claude / ChatGPT collaboration using the same workflow as StatsToolbox.
 - Shared agent rules: `AGENTS.md`; Claude entry point: `CLAUDE.md`.
 - **Plugin source 0.3.0 committed:** `InstanceRepeater/Main.lua`, `InstanceRepeater/Theme.lua`, and `InstanceRepeater.plugin`. Reworked from the earlier 0.2 test build. Theme uses StatsToolbox default accent, background, button fill and text RGB roles; not yet a pixel-perfect port of every StatsToolbox widget.
-- No automated tests are configured yet; no LOTRO in-game tests have been run from this repository. The new UI and shortcut logic are unverified.
+- No automated tests are configured yet; no LOTRO in-game tests have been run from this repository. The new UI and shortcut logic are unverified; no live-client screenshot comparison has been possible.
 
 ## Intended features
 
@@ -36,6 +36,8 @@ Read at the start of every session, update at the end (newest entry at the top o
 - Leave Instance button accurately reflects what it can do.
 
 ## Log
+
+- 2026-11-05 (ChatGPT): updated Main.lua with a masked native alias Quickslot, shortcut SetData for non-ASCII names, 6/12 selector and clearer Leave Instance portrait-menu instructions. Research supports Quickslot.MouseClick alongside alias activation; LOTRO API does not expose verified direct Leave Instance. NOT tested in game. Check masked shortcut click target, overlay and progress, window sizing, mode changes, and whether Party API enumerates raids.
 
 - 2026-11-05 (ChatGPT): added 0.3 plugin source and StatsToolbox-default-colour theme helper, compact collapsed-list UI. Not tested in LOTRO; invitation click advancement remains experimental and Leave Instance remains instructional.
 
