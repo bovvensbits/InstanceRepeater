@@ -216,8 +216,11 @@ local launcher = InstanceRepeater.Launcher.Create(uiSettings, saveUI, {
   reload = function()
     persist()
     saveUI()
-    local ok, err = pcall(function() Turbine.PluginManager.LoadPlugin("~InstanceRepeaterReloader") end)
-    if not ok then Turbine.Shell.WriteLine("InstanceRepeater: Reload fehlgeschlagen: " .. tostring(err)) end
+    Turbine.Shell.WriteLine("InstanceRepeater: Reload angefordert...")
+    local ok, result = pcall(function() return Turbine.PluginManager.LoadPlugin("~InstanceRepeaterReloader") end)
+    if not ok or result == false then
+      Turbine.Shell.WriteLine("InstanceRepeater: Reload-Helfer konnte nicht gestartet werden: " .. tostring(result))
+    end
   end,
   resetInvites = function() index = 1; updateSlot(); status:SetText("Einladungsfolge zurückgesetzt") end,
   showRoster = function() if not expanded then expanded = true; resize() end; win:SetVisible(true); uiSettings.windowHidden = false; saveUI() end,
