@@ -37,6 +37,8 @@ Read at the start of every session, update at the end (newest entry at the top o
 
 ## Log
 
+- 2026-11-05 (ChatGPT): added `Bovven/InstanceRepeater/Launcher.lua`, a 40px draggable gold/dark launcher based on StatsToolbox's interaction pattern. Left-click toggles the window; right-click opens menu (toggle, roster, reset invitations, reset position, hide until reload). Per-character position persisted. Artwork is standalone 'IR' rather than StatsToolbox's textured TGA ring. Not tested in game. Check event handling and save behavior.
+
 - 2026-11-05 (ChatGPT): moved the installable plugin to `Bovven/InstanceRepeater/` with descriptor `Bovven/InstanceRepeater.plugin`, updated Lua import and `<Package>` to `Bovven.InstanceRepeater.*`. ZIP now contains top-level `Bovven/` for installation alongside StatsToolbox. Not tested in LOTRO.
 
 - 2026-11-05 (ChatGPT): updated Main.lua with a masked native alias Quickslot, shortcut SetData for non-ASCII names, 6/12 selector and clearer Leave Instance portrait-menu instructions. Research supports Quickslot.MouseClick alongside alias activation; LOTRO API does not expose verified direct Leave Instance. NOT tested in game. Check masked shortcut click target, overlay and progress, window sizing, mode changes, and whether Party API enumerates raids.
